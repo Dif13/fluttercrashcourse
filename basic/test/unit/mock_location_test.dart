@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:lesson01/mocks/mock_location.dart';
 
 void main() {
