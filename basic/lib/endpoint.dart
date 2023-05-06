@@ -6,7 +6,7 @@ class Endpoint {
   static const prefix = '/api/v1';
 
   static Uri uri(String path, {Map<String, dynamic>? queryParameters}) {
-    final uri = new Uri(
+    final uri = Uri(
       scheme: apiScheme,
       host: apiHost,
       path: '$prefix$path',

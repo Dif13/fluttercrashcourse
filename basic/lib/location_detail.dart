@@ -6,11 +6,11 @@ import 'styles.dart';
 class LocationDetail extends StatelessWidget {
   final int locationID;
 
-  const LocationDetail(this.locationID);
+  const LocationDetail(this.locationID, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    var location = MockLocation.fetch(this.locationID);
+    var location = MockLocation.fetch(locationID);
 
     return Scaffold(
       appBar: AppBar(

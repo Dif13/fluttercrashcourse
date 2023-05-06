@@ -11,6 +11,7 @@ LocationFact _$LocationFactFromJson(Map<String, dynamic> json) => LocationFact(
       text: json['text'] as String?,
     );
 
+// ignore: unused_element
 Map<String, dynamic> _$LocationFactToJson(LocationFact instance) =>
     <String, dynamic>{
       'title': instance.title,
