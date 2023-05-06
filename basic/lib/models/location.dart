@@ -20,7 +20,7 @@ class Location {
       _$LocationFromJson(json);
 
   static Future<List<Location>> fetchAll() async {
-    var uri = Endpoint.uri('/locations');
+    var uri = Endpoint.uri('/locations', queryParameters: {});
 
     final resp = await http.get(uri);
 
@@ -37,7 +37,7 @@ class Location {
   }
 
   static Future<Location> fetchByID(int id) async {
-    var uri = Endpoint.uri('/locations/$id');
+    var uri = Endpoint.uri('/locations/$id', queryParameters: {});
 
     final resp = await http.get(uri);
 
