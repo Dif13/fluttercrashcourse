@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'location_list.dart';
-import 'mocks/mock_location.dart';
 import 'models/location.dart';
 
 class App extends StatelessWidget {
@@ -9,8 +7,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Location> mockLocation = MockLocation.fetchAll();
-
-    return MaterialApp(home: LocationList(mockLocation));
+    return MaterialApp(home: LocationList());
   }
 }

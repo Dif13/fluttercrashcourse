@@ -3,10 +3,19 @@ import 'package:lesson01/location_detail.dart';
 import 'package:lesson01/styles.dart';
 import 'models/location.dart';
 
-class LocationList extends StatelessWidget {
-  final List<Location> locations;
+class LocationList extends StatefulWidget {
+  @override
+  createState() => _LocationListState();
+}
 
-  const LocationList(this.locations, {super.key});
+class _LocationListState extends State<LocationList> {
+  List<Location> locations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadDate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +33,20 @@ class LocationList extends StatelessWidget {
     );
   }
 
+  loadDate() async {
+    final locations = await Location.fetchAll();
+    setState(() {
+      this.locations = locations;
+    });
+  }
+
   Widget _listViewItemBuilder(BuildContext context, int index) {
+    final location = this.locations[index];
     return ListTile(
       contentPadding: const EdgeInsets.all(10.0),
-      leading: _itemThambnail(locations[index]),
-      title: _itemTitle(locations[index]),
-      onTap: () => _navigateToLocationDetail(context, index),
+      leading: _itemThambnail(location),
+      title: _itemTitle(location),
+      onTap: () => _navigateToLocationDetail(context, location.id!),
     );
   }
 
@@ -43,9 +60,6 @@ class LocationList extends StatelessWidget {
   }
 
   Widget _itemThambnail(Location location) {
-    print(
-        '______________________________________________________________________________________________________________________________________________');
-    print(location.url);
     return Container(
       constraints: const BoxConstraints.tightFor(width: 100.0),
       child: Image.network(
