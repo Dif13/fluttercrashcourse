@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'components/banner_image.dart';
 import 'components/location_tile.dart';
+import 'components/default_app_bar.dart';
 import 'models/location.dart';
 import 'mocks/mock_location.dart';
 import 'styles.dart';
@@ -32,12 +34,7 @@ class _LocationDetailState extends State<LocationDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          location.name!,
-          style: Styles.naviBarTitle,
-        ),
-      ),
+      appBar: DefaultAppBar(),
       body: Stack(
         children: [
           _renderBody(context, location),
@@ -60,10 +57,13 @@ class _LocationDetailState extends State<LocationDetail> {
 
   Widget _renderBody(BuildContext context, Location location) {
     var result = <Widget>[];
-    result.add(_bannerImage(location.url!, BannerImageHight));
+    result.add(BannerImage(
+      url: location.url!,
+      height: BannerImageHight,
+    ));
     result.add(_renderHeader());
     result.addAll(_renderFacts(context, location));
-
+    result.add(_renderBottomSpacer());
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -88,7 +88,6 @@ class _LocationDetailState extends State<LocationDetail> {
       result.add(_sectionTitle(location.facts![i].title));
       result.add(_sectionText(location.facts![i].text));
     }
-
     return result;
   }
 
@@ -152,26 +151,8 @@ class _LocationDetailState extends State<LocationDetail> {
       throw 'Couln`t launch $url';
     }
   }
+}
 
-  Widget _bannerImage(String url, double height) {
-    Image image;
-    try {
-      if (url.isNotEmpty) {
-        image = Image.network(url, fit: BoxFit.fitWidth);
-        return Container(
-          constraints: BoxConstraints.tightFor(
-            height: height,
-          ),
-          child: image,
-        );
-      }
-    } catch (e) {
-      print("Could not load image $url");
-    }
-    return Container(
-      constraints: BoxConstraints.tightFor(
-        height: height,
-      ),
-    );
-  }
+Widget _renderBottomSpacer() {
+  return Container(height: FooterHeight);
 }

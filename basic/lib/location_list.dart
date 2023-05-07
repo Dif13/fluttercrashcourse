@@ -4,6 +4,8 @@ import 'package:lesson01/components/location_tile.dart';
 import 'package:lesson01/location_detail.dart';
 import 'package:lesson01/styles.dart';
 import 'package:lesson01/models/location.dart';
+import 'components/banner_image.dart';
+import 'components/default_app_bar.dart';
 
 const ListItemHight = 245.0;
 
@@ -25,12 +27,7 @@ class _LocationListState extends State<LocationList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Locations',
-          style: Styles.naviBarTitle,
-        ),
-      ),
+      appBar: DefaultAppBar(),
       body: RefreshIndicator(
         onRefresh: loadData,
         child: Column(
@@ -63,8 +60,10 @@ class _LocationListState extends State<LocationList> {
       child: Container(
         height: ListItemHight,
         child: Stack(children: [
-          _tileImage(
-              location.url!, MediaQuery.of(context).size.width, ListItemHight),
+          BannerImage(
+            url: location.url!,
+            height: ListItemHight,
+          ),
           _tileFooter(location),
         ]),
       ),
@@ -97,18 +96,6 @@ class _LocationListState extends State<LocationList> {
     );
   }
 
-  Widget _tileImage(String url, double width, double height) {
-    Image image;
-    try {
-      image = Image.network(url, fit: BoxFit.cover);
-      return Container(
-          constraints: const BoxConstraints.expand(), child: image);
-    } catch (e) {
-      print("Could not load image $url");
-    }
-    return Container();
-  }
-
   Widget _tileFooter(Location location) {
     final info = LocationTile(location: location, darkTheme: true);
     final overlay = Container(
@@ -124,13 +111,6 @@ class _LocationListState extends State<LocationList> {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [overlay],
-    );
-  }
-
-  Widget _itemTitle(Location location) {
-    return Text(
-      '${location.name}',
-      style: Styles.textDefault,
     );
   }
 }

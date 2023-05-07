@@ -11,10 +11,13 @@ class Styles {
   static const Color textColorBright = Color(0xFFFFFFFF);
   static const Color accentColor = Color(0xFFFF0000);
 
-  static const String _fontNameDefault = 'Muli';
+  static const String _fontNameDefault = 'Montserrat';
 
   static const naviBarTitle = TextStyle(
     fontFamily: _fontNameDefault,
+    fontWeight: FontWeight.w600,
+    fontSize: _textSizeDefault,
+    color: _textColorDefault,
   );
   static const headerLarge = TextStyle(
     fontFamily: _fontNameDefault,
