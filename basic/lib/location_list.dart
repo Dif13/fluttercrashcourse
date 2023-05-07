@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lesson01/location_detail.dart';
 import 'package:lesson01/styles.dart';
 import 'models/location.dart';
+import 'dart:async';
 
 class LocationList extends StatefulWidget {
   @override
@@ -10,11 +11,12 @@ class LocationList extends StatefulWidget {
 
 class _LocationListState extends State<LocationList> {
   List<Location> locations = [];
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    loadDate();
+    loadData();
   }
 
   @override
@@ -26,18 +28,26 @@ class _LocationListState extends State<LocationList> {
           style: Styles.naviBarTitle,
         ),
       ),
-      body: ListView.builder(
-        itemCount: locations.length,
-        itemBuilder: _listViewItemBuilder,
+      body: Column(
+        children: [
+          renderProgressBar(context),
+          Expanded(child: renderListView(context)),
+        ],
       ),
     );
   }
 
-  loadDate() async {
-    final locations = await Location.fetchAll();
-    setState(() {
-      this.locations = locations;
-    });
+  loadData() async {
+    if (mounted) {
+      setState(() => this.loading = true);
+      Timer(const Duration(milliseconds: 8000), () async {
+        final locations = await Location.fetchAll();
+        setState(() {
+          this.locations = locations;
+          this.loading = false;
+        });
+      });
+    }
   }
 
   Widget _listViewItemBuilder(BuildContext context, int index) {
@@ -47,6 +57,23 @@ class _LocationListState extends State<LocationList> {
       leading: _itemThambnail(location),
       title: _itemTitle(location),
       onTap: () => _navigateToLocationDetail(context, location.id!),
+    );
+  }
+
+  Widget renderProgressBar(BuildContext context) {
+    return (this.loading
+        ? LinearProgressIndicator(
+            value: null,
+            backgroundColor: Colors.white,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+          )
+        : Container());
+  }
+
+  Widget renderListView(BuildContext context) {
+    return ListView.builder(
+      itemCount: locations.length,
+      itemBuilder: _listViewItemBuilder,
     );
   }
 
