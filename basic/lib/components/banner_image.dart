@@ -10,11 +10,13 @@ class BannerImage extends StatelessWidget {
   Widget build(BuildContext context) {
     Image image;
     try {
-      image = Image.network(url, fit: BoxFit.cover);
-      return Container(
-        constraints: BoxConstraints.expand(height: height),
-        child: image,
-      );
+      if (url.isNotEmpty) {
+        image = Image.network(url, fit: BoxFit.cover);
+        return Container(
+          constraints: BoxConstraints.expand(height: height),
+          child: image,
+        );
+      }
     } catch (e) {
       print("Could not load image $url");
     }

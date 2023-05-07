@@ -57,13 +57,13 @@ class _LocationDetailState extends State<LocationDetail> {
 
   Widget _renderBody(BuildContext context, Location location) {
     var result = <Widget>[];
-    result.add(BannerImage(
-      url: location.url!,
-      height: BannerImageHight,
-    ));
+    result.add(
+      BannerImage(url: location.url!, height: BannerImageHight),
+    );
     result.add(_renderHeader());
     result.addAll(_renderFacts(context, location));
     result.add(_renderBottomSpacer());
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -151,8 +151,8 @@ class _LocationDetailState extends State<LocationDetail> {
       throw 'Couln`t launch $url';
     }
   }
-}
 
-Widget _renderBottomSpacer() {
-  return Container(height: FooterHeight);
+  Widget _renderBottomSpacer() {
+    return Container(height: FooterHeight);
+  }
 }
