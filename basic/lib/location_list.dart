@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lesson01/components/location_tile.dart';
 import 'package:lesson01/location_detail.dart';
 import 'package:lesson01/styles.dart';
-import 'models/location.dart';
-import 'dart:async';
+import 'package:lesson01/models/location.dart';
+
+const ListItemHight = 245.0;
 
 class LocationList extends StatefulWidget {
   @override
@@ -28,19 +31,22 @@ class _LocationListState extends State<LocationList> {
           style: Styles.naviBarTitle,
         ),
       ),
-      body: Column(
-        children: [
-          renderProgressBar(context),
-          Expanded(child: renderListView(context)),
-        ],
+      body: RefreshIndicator(
+        onRefresh: loadData,
+        child: Column(
+          children: [
+            renderProgressBar(context),
+            Expanded(child: renderListView(context)),
+          ],
+        ),
       ),
     );
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     if (mounted) {
       setState(() => this.loading = true);
-      Timer(const Duration(milliseconds: 8000), () async {
+      Timer(const Duration(milliseconds: 3000), () async {
         final locations = await Location.fetchAll();
         setState(() {
           this.locations = locations;
@@ -52,17 +58,22 @@ class _LocationListState extends State<LocationList> {
 
   Widget _listViewItemBuilder(BuildContext context, int index) {
     final location = this.locations[index];
-    return ListTile(
-      contentPadding: const EdgeInsets.all(10.0),
-      leading: _itemThambnail(location),
-      title: _itemTitle(location),
+    return GestureDetector(
       onTap: () => _navigateToLocationDetail(context, location.id!),
+      child: Container(
+        height: ListItemHight,
+        child: Stack(children: [
+          _tileImage(
+              location.url!, MediaQuery.of(context).size.width, ListItemHight),
+          _tileFooter(location),
+        ]),
+      ),
     );
   }
 
   Widget renderProgressBar(BuildContext context) {
-    return (this.loading
-        ? LinearProgressIndicator(
+    return (loading
+        ? const LinearProgressIndicator(
             value: null,
             backgroundColor: Colors.white,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
@@ -86,13 +97,33 @@ class _LocationListState extends State<LocationList> {
     );
   }
 
-  Widget _itemThambnail(Location location) {
-    return Container(
-      constraints: const BoxConstraints.tightFor(width: 100.0),
-      child: Image.network(
-        location.url!,
-        fit: BoxFit.fitWidth,
+  Widget _tileImage(String url, double width, double height) {
+    Image image;
+    try {
+      image = Image.network(url, fit: BoxFit.cover);
+      return Container(
+          constraints: const BoxConstraints.expand(), child: image);
+    } catch (e) {
+      print("Could not load image $url");
+    }
+    return Container();
+  }
+
+  Widget _tileFooter(Location location) {
+    final info = LocationTile(location: location, darkTheme: true);
+    final overlay = Container(
+      padding: const EdgeInsets.symmetric(
+          vertical: 5.0, horizontal: Styles.horizontalPaddingDefault),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.5),
       ),
+      child: info,
+    );
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [overlay],
     );
   }
 
